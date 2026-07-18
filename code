@@ -1,0 +1,69 @@
+//IoT-Water-Level-Indicator
+//Blynk IoT
+
+#define BLYNK_TEMPLATE_ID "YourTemplateID"
+#define BLYNK_TEMPLATE_NAME "WaterLevelMonitor"
+#define BLYNK_AUTH_TOKEN "YourBlynkAuthToken"
+
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+
+char ssid[] = "YourWiFiSSID";
+char pass[] = "YourWiFiPassword";
+
+// Tank level probe pins
+const int PROBE_25 = D1;
+const int PROBE_75 = D2;
+const int PROBE_FULL = D3;
+
+int lastLevel = 100;
+int todayUsage = 0;  // Daily estimated usage in litres
+unsigned long lastLogTime = 0;
+
+BlynkTimer timer;
+
+int getLevel() {
+  bool is25 = digitalRead(PROBE_25) == LOW;
+  bool is75 = digitalRead(PROBE_75) == LOW;
+  bool isFull = digitalRead(PROBE_FULL) == LOW;
+
+  if (isFull) return 100;
+  else if (is75) return 75;
+  else if (is25) return 25;
+  else return 0;
+}
+
+void checkLevel() {
+  int currentLevel = getLevel();
+
+  if (currentLevel < lastLevel) {
+    int litresUsed = (lastLevel - currentLevel) * 50;  // 1% = 50L for 5000L tank
+    todayUsage += litresUsed;
+    lastLevel = currentLevel;
+  }
+  else if (currentLevel > lastLevel) {
+    lastLevel = currentLevel;  // tank refilled
+  }
+}
+
+void sendDailyUsage() {
+  Blynk.virtualWrite(V1, todayUsage);  // Send daily usage to Blynk
+  todayUsage = 0;                      // Reset after sending
+}
+
+void setup() {
+  Serial.begin(9600);
+  Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass);
+
+  pinMode(PROBE_25, INPUT_PULLUP);
+  pinMode(PROBE_75, INPUT_PULLUP);
+  pinMode(PROBE_FULL, INPUT_PULLUP);
+
+  timer.setInterval(10000L, checkLevel);      // check level every 10s
+  timer.setInterval(86400000L, sendDailyUsage); // send usage every 24 hrs (86400s)
+}
+
+void loop() {
+  Blynk.run();
+  timer.run();
+}
