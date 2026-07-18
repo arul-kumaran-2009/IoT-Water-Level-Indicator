@@ -42,11 +42,11 @@ An ESP32-based IoT Water Level Indicator that monitors the water level of an ove
 
 ### Complete Setup
 
-![Project](images/project.jpg)
+![Tank wiring](images/Tank wiring.jpg)
 
 ### Wiring
 
-![Wiring](images/wiring.jpg)
+![Wiring](images/ESP.jpg)
 
 ---
 
