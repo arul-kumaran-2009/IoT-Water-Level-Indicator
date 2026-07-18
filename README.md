@@ -11,9 +11,9 @@ An ESP32-based IoT Water Level Indicator that monitors the water level of an ove
 - 📶 Wi-Fi connectivity
 - 🌊 Real-time water level monitoring
 - 📱 Mobile-friendly dashboard
-- 🌐 Local web server
+- 🌐 Logs daily usage in litres
 - 🔔 Tank Full notification
-- ⚠️ Low Water Level alert
+- ⚠️ Low Water Level alert and Detects level drop to estimate usage
 - ⚡ Low-cost hardware
 - 🔋 Runs continuously using a 5V adapter 24/7
 
@@ -21,7 +21,7 @@ An ESP32-based IoT Water Level Indicator that monitors the water level of an ove
 
 ## Hardware Used
 
-- ESP32 Development Board
+- ESP8266 Development Board 
 - Water level probes
 - Connecting wires
 - 5V Mobile Charger
@@ -48,9 +48,17 @@ An ESP32-based IoT Water Level Indicator that monitors the water level of an ove
 
 ![Wiring](images/wiring.jpg)
 
-
-
 ---
+
+## Folder Structure
+
+```text
+code/
+images/
+schematics/
+docs/
+videos/
+```
 
 ## Working Principle
 
